@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 const HomePage = () => {
+
+  // Using the usestate so that we can change the states when the numbers are changing.
   const [employeeCount, setEmployeeCount] = useState(0);
   const [dailyTransactions, setDailyTransactions] = useState(0);
   const [availableItems, setAvailableItems] = useState(0);
-  // const navigate = useNavigate();
-
+  
   useEffect(() => {
+    // The fetchstats would call the function once when the component is loaded.
     fetchStats();
 
-    const interval = setInterval(() => {
-      fetchStats();
-    }, 10000);
-
-    return () => clearInterval(interval);
   }, []);
 
+  // Creating the function to get the live data from the server.
   const fetchStats = async () => {
     try {
       const res = await fetch("http://localhost:5000/api/stats");
@@ -24,25 +22,26 @@ const HomePage = () => {
       setEmployeeCount(data.totalEmployees);
       setDailyTransactions(data.dailyTransactions);
       setAvailableItems(data.availableItems);
-    } catch (error) {
-      console.error("Failed to fetch stats:", error);
+    } 
+    catch (error) {
+      console.error("Failed to fetch the stats from the Backend:", error);
     }
   };
 
   return (
     <div className="min-h-screen bg-[#219C89] text-white flex flex-col">
-      {/* Navbar */}
+      {/* Navbar section which consists of the company name along eith the login and signup buttons */}
       <header className="w-full flex justify-between items-center px-6 py-4">
         <div className="text-2xl font-bold">Company</div>
         <div className="space-x-4">
           <button
-            // onClick={() => navigate("/login")}
+            
             className="bg-black text-white px-4 py-2 rounded font-semibold"
           >
             LOGIN
           </button>
           <button
-            // onClick={() => navigate("/signup")}
+            
             className="bg-black text-white px-4 py-2 rounded font-semibold"
           >
             SIGNUP
@@ -50,7 +49,7 @@ const HomePage = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* Main content section which would have the welcome message and the heading  */}
       <main className="flex flex-col items-center justify-center text-center flex-grow px-4 py-10">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-3">
           Canteen Management <br /> System
@@ -62,7 +61,10 @@ const HomePage = () => {
           Get Started
         </button>
 
-        {/* Stats Section */}
+
+
+        {/* These are the main stats section which would be updated as soon the backend updation is done */}
+
         <div className="flex flex-col md:flex-row gap-6 pb-10">
           <div className="bg-white text-black rounded-xl shadow-md p-6 text-center w-64">
             <div className="text-3xl font-bold">{employeeCount}</div>
