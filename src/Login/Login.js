@@ -1,11 +1,12 @@
 import React, {} from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
+  const navigate = useNavigate();
   return (
     <div className="relative w-full max-h-100% p-20 bg-gray-100 flex items-center justify-center overflow-hidden">
-      {/* Signup Card */}
+      {/* Login Credentials */}
       <div className="relative z-10 bg-white rounded-2xl shadow-lg p-8 w-96 flex flex-col items-center">
         <h2 className="text-2xl font-bold mb-2">Welcome Back</h2>
         <p className="text-gray-500 mb-6">Enter Your Credentials to Login!</p>
@@ -37,7 +38,7 @@ const Login = () => {
         </form>
 
         <p className="text-sm text-gray-600 mt-6">
-          <a href='/'>Create a new Account</a>
+          <a href='/'onClick={()=>navigate('/Signup')} >Create a new Account</a>
         </p>
       </div>
 

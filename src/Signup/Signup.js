@@ -2,11 +2,12 @@ import React, {} from 'react';
 import SignupButton from './SignupButton';
 import InputFieldsSignup from './InputFieldsSignup';
 import RoleButton from './RoleButton';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const Signup = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   return (
     <div className="relative w-full max-h-100 p-2 bg-gray-100 flex items-center justify-center overflow-hidden">
       {/* Signup Page with the following entries which would be stored into the database for further login purpose */}
@@ -21,7 +22,7 @@ const Signup = () => {
         </form>
 
         <p className="text-sm text-gray-600 mt-6">
-          <a href='/'>Already have an account? </a>
+          <a href='/' onClick={()=>navigate('/Login')}>Already have an account? </a>
         </p>
       </div>
     </div>
