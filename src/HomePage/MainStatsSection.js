@@ -1,5 +1,4 @@
 import { useState , useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 
 const MainStatsSection = () => {
      // Created a fucntion named navigate which uses useNavigate function which would help to direct the user to the another pages.
