@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useState , useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
 
-
-const HomePage = () => {
+const MainStatsSection = () => {
+     // Created a fucntion named navigate which uses useNavigate function which would help to direct the user to the another pages.
 
   // Using the usestate so that we can change the states when the numbers are changing.
   const [employeeCount, setEmployeeCount] = useState(0);
@@ -29,43 +30,10 @@ const HomePage = () => {
       console.error("Failed to fetch the stats from the Backend:", error);
     }
   };
-
+  
   return (
-    
-    <div className="min-h-screen bg-[#219C89] text-white flex flex-col">
-      {/* Navbar section which consists of the company name along eith the login and signup buttons */}
-      <header className="w-full flex justify-between items-center px-6 py-4">
-        <div className="text-4xl font-bold">Company</div>
-        <div className="space-x-4">
-          <button
-            
-            className="bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200 hover:text-black"
-          >
-            LOGIN
-          </button>
-          <button
-            
-            className="bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200 hover:text-black"
-          >
-            SIGNUP
-          </button>
-        </div>
-      </header>
-
-      {/* Main content section which would have the welcome message and the heading  */}
-      <main className="flex flex-col items-center justify-center text-center flex-grow px-4 py-10">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-3">
-          Canteen Management <br/> System
-        </h1>
-        <p className="text-lg mb-6 font-medium  mt-6">
-          Welcome to the corporate office <br /> canteen management system!
-        </p>
-        <button className="bg-white text-black font-semibold px-6 py-2 rounded mb-10 hover:bg-gray-200 transition mt-6">
-          Get Started
-        </button>
-
-
-
+    <div>
+         <main className="flex flex-col items-center justify-center text-center flex-grow px-4 py-3">
         {/* These are the main stats section which would be updated as soon the backend updation is done */}
 
         <div className="flex flex-col md:flex-row gap-6 pb-10">
@@ -83,8 +51,9 @@ const HomePage = () => {
           </div>
         </div>
       </main>
+      
     </div>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default MainStatsSection;
