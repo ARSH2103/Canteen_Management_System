@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 
 
 
@@ -22,27 +24,26 @@ const Signup = () => {
             ...OldData,  role
           }));
         };
-    // const[username,setUsername] = useState('')
-    // const[employeeId,setEmployeeId] = useState('')
-    // const[email,setEmail] = useState('')
-    // const[password,setPassword] = useState('')
-    // const[department,setDepartment] = useState('')
-
+  
   
     const isSignupFormValid = formData.username.trim()!=='' && formData.employeeId.trim()!=='' && formData.email.trim()!=='' 
     && formData.password.trim()!=='' && formData.department.trim()!=='';
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
 
   
   // Created the Funtion handleSubmit which would handle when the form is been submitted.
-  const handleSubmit = (error) => {
+  const handleSubmit = async (error) => {
     error.preventDefault();
-
-    // Logging the details entered by the user onto the console.
-    console.log(formData);
-    alert('Signup successful!.');
-    navigate('/login');
+    
+    try 
+    {
+      const res = await axios.post('http://localhost:3000/signup', formData);
+      alert(res.data.message);
+      window.location.href='/Login'
+    }catch(error){
+      alert("Signup Failed");
+    }
   };
 
 

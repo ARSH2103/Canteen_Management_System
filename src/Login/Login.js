@@ -1,5 +1,6 @@
 import React,{useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 const Login = () => {
@@ -9,6 +10,32 @@ const Login = () => {
     const isLoginFormValid = email.trim() !== '' && password.trim() !== '';
 
     const navigate = useNavigate();
+
+    // Creating handlesubmit function 
+
+    const handleLogin = async (e)=> {
+      e.preventDefault();
+      try
+      {
+        const res = await axios.post('http://localhost:3000/login', { email, password });
+      alert(res.data.message);
+      
+
+      if(res.data.role === 'Admin')
+      {
+        navigate('/admin-dashboard');
+      }
+      else{
+        navigate('/employee-dashboard');
+      }
+    }
+      catch(error)
+      {
+        alert("Login Failed")
+      }
+
+  
+    };
 
 
 
@@ -21,7 +48,7 @@ const Login = () => {
         <h2 className="text-4xl font-bold">Welcome Back</h2>
         <p className="text-gray-500 mb-6 text-sm mt-3">Enter Your Credentials to Login!</p>
         
-        <form className="w-80 flex flex-col gap-5 p-8">
+        <form onSubmit={handleLogin} className="w-80 flex flex-col gap-5 p-8">
           <input
             type="email"
             name="email"
