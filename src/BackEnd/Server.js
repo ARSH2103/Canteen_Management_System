@@ -79,7 +79,7 @@ app.post('/signup' , (req , res)=>{
 
 
 
-// Creatint the Login Route for the users
+// Creatintg the Login Route for the users
 
 app.post('/Login' , (req,res)=>{
     const {email , password} = req.body;

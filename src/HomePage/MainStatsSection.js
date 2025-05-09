@@ -36,15 +36,15 @@ const MainStatsSection = () => {
         {/* These are the main stats section which would be updated as soon the backend updation is done */}
 
         <div className="flex flex-col md:flex-row gap-6 pb-10">
-          <div className="bg-gray-200 text-black rounded-xl shadow-md p-6 text-center w-64">
+          <div className="bg-gray-300 text-black rounded-xl shadow-md p-6 text-center w-64">
             <div className="text-3xl font-bold">{employeeCount}</div>
             <div className="text-sm mt-2 font-medium">Total Employees</div>
           </div>
-          <div className="bg-gray-200 text-black rounded-xl shadow-md p-6 text-center w-64">
+          <div className="bg-gray-300 text-black rounded-xl shadow-md p-6 text-center w-64">
             <div className="text-3xl font-bold">{dailyTransactions}</div>
             <div className="text-sm mt-2 font-medium">Daily Transaction</div>
           </div>
-          <div className="bg-gray-200 text-black rounded-xl shadow-md p-6 text-center w-64">
+          <div className="bg-gray-300 text-black rounded-xl shadow-md p-6 text-center w-64">
             <div className="text-3xl font-bold">{availableItems}</div>
             <div className="text-sm mt-2 font-medium">Available Items</div>
           </div>

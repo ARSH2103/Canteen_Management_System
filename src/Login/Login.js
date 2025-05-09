@@ -7,6 +7,7 @@ const Login = () => {
     // Used the useState for updating the values when the user enters the value.
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    
     const isLoginFormValid = email.trim() !== '' && password.trim() !== '';
 
     const navigate = useNavigate();
@@ -18,15 +19,16 @@ const Login = () => {
       try
       {
         const res = await axios.post('http://localhost:3000/login', { email, password });
-      alert(res.data.message);
+        
       
 
       if(res.data.role === 'Admin')
       {
-        navigate('/admin-dashboard');
+        navigate('/Admin-Dashbaord');
       }
-      else{
-        navigate('/employee-dashboard');
+      else
+      {
+        navigate('/employee-Dashboard');
       }
     }
       catch(error)
