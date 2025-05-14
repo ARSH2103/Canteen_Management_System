@@ -1,13 +1,10 @@
-import React, {useState} from 'react';
-// import { useNavigate } from 'react-router-dom';
+import React, {useState,useEffect} from 'react';
 import axios from 'axios';
 
 
 
 
 const Signup = () => {
-
-
   //Used the useState hook so that the the formData coul be updated and shown using setFormData
   const [formData, setFormData] = useState({
     username: '',
@@ -17,18 +14,84 @@ const Signup = () => {
     department: '',
     role: 'Admin',
   });
-        // Creating the functiuon named as handleRoleChange which would change the role of the user according to the option selected by the user.
-        const handleRoleChange = (role) => {
-          setFormData((OldData) => ({
-            // the below line is used to copy all the data as it is.(also Known as Spread operator). 
-            ...OldData,  role
-          }));
-        };
+
+  const [error , setError] = useState({});
+    const [isFormValid, setIsFormValid] = useState(false);
+
+
+  const ValidateUsername = (username) =>{
+    if(!username.trim())
+    {
+      return `Username is Required`;
+    }
+    if(username.length <3)
+    {
+      return `Username must have atleast 3 characters`
+    }return '';
+  }
+
+  const ValidateEmployeeId = (employeeId) =>{
+    if(!employeeId.trim())
+    {
+      return `Employee Id is Required`
+    }
+        if (!/^\d+$/.test(employeeId)) return 'Employee ID must be numeric';
+return '';
+  }
+
+  const ValidateEmail = (email) =>{
+    const Regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!email.trim())
+    {
+      return 'Email is Required';
+    }
+    if(!Regex.test(email))
+    {
+      return 'Enter a Valid Email';
+    }return '';
+  }
+
+  const ValidatePassword = (password)=>{
+    if(!password.trim())
+    {
+      return 'Password is Required';
+    }
+    if(password.length <6)
+    {
+      return 'Password Must have atleast 6 Characters';
+    }return '';
+  }
+
+  const ValidateDepartment = (department)=>{
+    if(!department.trim())
+    {
+      return 'Department is Required';
+    }return '';
+  }
+
+   useEffect(() => {
+    const newError = {
+      username: ValidateUsername(formData.username),
+      employeeId: ValidateEmployeeId(formData.employeeId),
+      email: ValidateEmail(formData.email),
+      password: ValidatePassword(formData.password),
+      department: ValidateDepartment(formData.department),
+    };
+    setError(newError);
+    setIsFormValid(Object.values(newError).every((error) => error === ''));
+  }, [formData]);
+
+
+  // Creating the functiuon named as handleRoleChange which would change the role of the user according to the option selected by the user.
+  const handleRoleChange = (role) => {
+  setFormData((OldData) => ({
+      // the below line is used to copy all the data as it is.(also Known as Spread operator). 
+      ...OldData,  role
+     }));
+  };
   
-  
-    const isSignupFormValid = formData.username.trim()!=='' && formData.employeeId.trim()!=='' && formData.email.trim()!=='' 
-    && formData.password.trim()!=='' && formData.department.trim()!=='';
-    // const navigate = useNavigate();
+
+  // const navigate = useNavigate();
 
 
   
@@ -65,6 +128,8 @@ const Signup = () => {
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
+          {error.username && <p className="text-red-500 text-sm mt-1">{error.username}</p>}
+
           <input
             type="text"
             name="employeeId"
@@ -74,6 +139,8 @@ const Signup = () => {
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
+          {error.employeeId && <p className="text-red-500 text-sm mt-1">{error.employeeId}</p>}
+
           <input
             type="email"
             name="email"
@@ -83,6 +150,8 @@ const Signup = () => {
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
+          {error.email && <p className="text-red-500 text-sm mt-1">{error.email}</p>}
+
           <input
             type="password"
             name="password"
@@ -92,6 +161,8 @@ const Signup = () => {
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
+          {error.password && <p className="text-red-500 text-sm mt-1">{error.password}</p>}
+
           <input
             type="text"
             name="department"
@@ -101,6 +172,8 @@ const Signup = () => {
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
+          {error.department && <p className="text-red-500 text-sm mt-1">{error.department}</p>}
+
 
           {/* Role Selection */}
           <div className="flex justify-between gap-4">
@@ -132,9 +205,9 @@ const Signup = () => {
 
           <button
               type="submit"
-              disabled={!isSignupFormValid}
+              disabled={!isFormValid}
               className={`w-full ${
-                isSignupFormValid
+                isFormValid
                   ? 'bg-green-500 hover:bg-green-600'
                   : 'bg-gray-300 cursor-not-allowed'
               } text-white p-3 rounded-lg font-semibold transition-all`}
