@@ -2,8 +2,6 @@ import React, {useState,useEffect} from 'react';
 import axios from 'axios';
 
 
-
-
 const Signup = () => {
   //Used the useState hook so that the the formData coul be updated and shown using setFormData
   const [formData, setFormData] = useState({
@@ -16,13 +14,13 @@ const Signup = () => {
   });
 
   const [error , setError] = useState({});
-    const [isFormValid, setIsFormValid] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
 
   const ValidateUsername = (username) =>{
     if(!username.trim())
     {
-      return `Username is Required`;
+      return `Username is required`;
     }
     if(username.length <3)
     {
@@ -33,7 +31,7 @@ const Signup = () => {
   const ValidateEmployeeId = (employeeId) =>{
     if(!employeeId.trim())
     {
-      return `Employee Id is Required`
+      return `Employee Id is required`
     }
         if (!/^\d+$/.test(employeeId)) return 'Employee ID must be numeric';
 return '';
@@ -43,29 +41,29 @@ return '';
     const Regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(!email.trim())
     {
-      return 'Email is Required';
+      return 'Email is required';
     }
     if(!Regex.test(email))
     {
-      return 'Enter a Valid Email';
+      return 'Enter a valid email';
     }return '';
   }
 
   const ValidatePassword = (password)=>{
     if(!password.trim())
     {
-      return 'Password is Required';
+      return 'Password is required';
     }
     if(password.length <6)
     {
-      return 'Password Must have atleast 6 Characters';
+      return 'Password must have atleast 6 characters';
     }return '';
   }
 
   const ValidateDepartment = (department)=>{
     if(!department.trim())
     {
-      return 'Department is Required';
+      return 'Department is required';
     }return '';
   }
 
@@ -89,12 +87,9 @@ return '';
       ...OldData,  role
      }));
   };
-  
 
   // const navigate = useNavigate();
 
-
-  
   // Created the Funtion handleSubmit which would handle when the form is been submitted.
   const handleSubmit = async (error) => {
     error.preventDefault();
@@ -108,8 +103,6 @@ return '';
       alert("Signup Failed");
     }
   };
-
-
 
   return (
     <div className="relative w-full max-h-100 p-2 bg-gray-100 flex items-center justify-center overflow-hidden">
@@ -128,8 +121,9 @@ return '';
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-          {error.username && <p className="text-red-500 text-sm mt-1">{error.username}</p>}
-
+           {formData.username !== '' && error.username && (
+             <p className="text-red-500 text-sm mt-1">{error.username}</p>
+           )}
           <input
             type="text"
             name="employeeId"
@@ -139,8 +133,9 @@ return '';
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-          {error.employeeId && <p className="text-red-500 text-sm mt-1">{error.employeeId}</p>}
-
+            {formData.employeeId !== '' && error.employeeId && (
+             <p className="text-red-500 text-sm mt-1">{error.employeeId}</p>
+           )}
           <input
             type="email"
             name="email"
@@ -150,8 +145,9 @@ return '';
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-          {error.email && <p className="text-red-500 text-sm mt-1">{error.email}</p>}
-
+           {formData.email !== '' && error.email && (
+             <p className="text-red-500 text-sm mt-1">{error.email}</p>
+           )}
           <input
             type="password"
             name="password"
@@ -161,7 +157,9 @@ return '';
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-          {error.password && <p className="text-red-500 text-sm mt-1">{error.password}</p>}
+           {formData.password !== '' && error.password && (
+             <p className="text-red-500 text-sm mt-1">{error.password}</p>
+           )}
 
           <input
             type="text"
@@ -172,8 +170,9 @@ return '';
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-          {error.department && <p className="text-red-500 text-sm mt-1">{error.department}</p>}
-
+            {formData.department !== '' && error.department && (
+             <p className="text-red-500 text-sm mt-1">{error.department}</p>
+           )}
 
           {/* Role Selection */}
           <div className="flex justify-between gap-4">

@@ -18,17 +18,20 @@ const Login = () => {
       e.preventDefault();
       try
       {
-        const res = await axios.post('http://localhost:3000/login', { email, password });
         
-      
+        const res = await axios.post('http://localhost:3000/login', { email, password });
+        console.log(res.data);
+        
 
       if(res.data.role === 'Admin')
       {
+        console.log(123);
+        
         navigate('/Admin-Dashbaord');
       }
       else
       {
-        navigate('/employee-Dashboard');
+        navigate('/Employee-Dashboard');
       }
     }
       catch(error)

@@ -5,13 +5,9 @@ const cors = require('cors')
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 
-
-
 // Create the instances.
 const app = express();
 const PORT = 3000;
-
-
 
 // Creating the middlewares
 app.use(cors())
@@ -74,11 +70,6 @@ app.post('/signup' , (req , res)=>{
     });
 });
 
-
-
-
-
-
 // Creatintg the Login Route for the users
 
 app.post('/Login' , (req,res)=>{
@@ -107,16 +98,12 @@ app.post('/Login' , (req,res)=>{
             }
 
             res.send({
-                message:"Login Successful"
+                message:"Login Successful",
+                
             })
         })
     })
 })
-
-
-
-
-
 
 // Starting the server using .listen
 app.listen(PORT , ()=>{
