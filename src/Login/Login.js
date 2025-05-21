@@ -7,7 +7,7 @@ const Login = () => {
     // Used the useState for updating the values when the user enters the value.
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
+
     const isLoginFormValid = email.trim() !== '' && password.trim() !== '';
 
     const navigate = useNavigate();
@@ -15,31 +15,29 @@ const Login = () => {
     // Creating handlesubmit function 
 
     const handleLogin = async (e)=> {
+      
       e.preventDefault();
       try
-      {
-        
-        const res = await axios.post('http://localhost:3000/login', { email, password });
-        console.log(res.data);
+    {
+      const res = await axios.post('http://localhost:3000/Login', {email , password});
+
         
 
       if(res.data.role === 'Admin')
-      {
-        console.log(123);
-        
-        navigate('/Admin-Dashbaord');
+      {        
+        navigate('/Admin-Dashboard');
       }
+
       else
       {
         navigate('/Employee-Dashboard');
       }
+      
     }
       catch(error)
       {
         alert("Login Failed")
       }
-
-  
     };
 
 

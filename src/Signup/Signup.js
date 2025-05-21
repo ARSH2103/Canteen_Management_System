@@ -10,7 +10,7 @@ const Signup = () => {
     email: '',
     password: '',
     department: '',
-    role: 'Admin',
+    role:'Admin',
   });
 
   const [error , setError] = useState({});
@@ -96,7 +96,7 @@ return '';
     
     try 
     {
-      const res = await axios.post('http://localhost:3000/signup', formData);
+      const res = await axios.post('http://localhost:3000/Signup', formData);
       alert(res.data.message);
       window.location.href='/Login'
     }catch(error){
@@ -179,7 +179,7 @@ return '';
             <button
               type="button"
               className={`w-1/2 py-2 rounded-lg ${
-                formData.role === 'Admin'
+                formData.role ==='Admin'
                 // Using strick Operator over here to compare the role.
                 // Also using the ternary condition over here for role option.
                   ? 'bg-green-500 text-white'
@@ -192,7 +192,7 @@ return '';
             <button
               type="button"
               className={`w-1/2 py-2 rounded-lg ${
-                formData.role === 'Employee'
+                formData.role ==='Employee'
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-gray-600'
               }`}

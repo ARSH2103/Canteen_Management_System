@@ -18,7 +18,7 @@ const MainStatsSection = () => {
   const fetchStats = async () => {
     try 
     {
-      const response = await fetch("http://localhost:5000/api/stats");
+      const response = await fetch("http://localhost:3000/api/stats");
       const data = await response.json();
       setEmployeeCount(data.totalEmployees);
       setDailyTransactions(data.dailyTransactions);

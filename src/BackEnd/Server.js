@@ -13,7 +13,6 @@ const PORT = 3000;
 app.use(cors())
 app.use(bodyParser.json())
 
-
 // Creating the database connection 
 const database = mysql.createConnection({
     host: 'localhost',
@@ -35,12 +34,10 @@ database.connect((error)=>{
     }
 })
 
-
 // Creating the required routings for both the login and Signup
 // Creating the routing for signup page
-app.post('/signup' , (req , res)=>{
-    
-    
+app.post('/Signup' , (req , res)=>{
+
     const{username , employeeId , email , password , department , role} = req.body;
 
     // Hashing the password field
@@ -55,14 +52,11 @@ app.post('/signup' , (req , res)=>{
                 {
                     console.error(error);
                     return res.status(500).send("Database have some error")
-                    
-                    
                 }
                 else
                 {
-                    
                     res.send({
-                        message: "User Registered successfully"
+                        message: "User Registered successfully",
                     })
                 }
         });
@@ -71,10 +65,8 @@ app.post('/signup' , (req , res)=>{
 });
 
 // Creatintg the Login Route for the users
-
 app.post('/Login' , (req,res)=>{
     const {email , password} = req.body;
-
     database.query('SELECT * FROM users WHERE email =?',[email] ,(error , result)=>{
         if(error)
         {
@@ -86,7 +78,8 @@ app.post('/Login' , (req,res)=>{
         }
 
         const user = result[0];
-
+        console.log(user);
+        
         bcrypt.compare(password ,user.password , (error,isMatch)=>{
             if(error)
             {
@@ -98,8 +91,8 @@ app.post('/Login' , (req,res)=>{
             }
 
             res.send({
-                message:"Login Successful",
-                
+                message:"Login Successful", 
+                role :user.role
             })
         })
     })
