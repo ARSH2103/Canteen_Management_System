@@ -1,14 +1,16 @@
 import React from 'react'
 const ItemsOfTheDayList = [
-  { name: 'Fish Burger', price: '$5.59', img: '🍔' },
-  { name: 'Spicy Burger', price: '$5.59', img: '🌶️' },
-  { name: 'Cheese Burger', price: '$5.59', img: '🧀' },
+  { name: 'Dosa', price: '$5.59', img: '🍔' },
+  { name: 'Idli', price: '$5.59', img: '🌶️' },
+  { name: 'Aloo Parantha', price: '$5.59', img: '🧀' },
 ];
 const ViewItemOfTheDay = () => {
   return (
+    
+    
     <div>
-       <div className="flex-1 p-6">
-       <h2 className="mt-8 text-lg font-semibold">Items of The Day</h2>
+       <div className="flex-1 p-0">
+       <h2 className="mt-2 text-lg font-semibold">Items of The Day</h2>
       <div className="grid grid-cols-4 gap-6 mt-4">
         {ItemsOfTheDayList.map((item, idx) => (
           <div key={idx} className="bg-white shadow rounded-lg p-4 text-center">
