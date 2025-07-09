@@ -1,71 +1,92 @@
-import React, { useState } from 'react'
-const AvailableItmesInMasterList = [
-  { name: 'Fish Burger', price: '$5.59', img: '🍔' },
-  { name: 'Spicy Burger', price: '$5.59', img: '🌶️' },
-  { name: 'Cheese Burger', price: '$5.59', img: '🧀' },
-  { name: 'Cheese Burger', price: '$5.59', img: '🧀' },
-  { name: 'Cheese Burger', price: '$5.59', img: '🧀' },
-  { name: 'Cheese Burger', price: '$5.59', img: '🧀' },
-  { name: 'Cheese Burger', price: '$5.59', img: '🧀' },
-  { name: 'Cheese Burger', price: '$5.59', img: '🧀' },
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Plus } from 'lucide-react';
 
-];
+const ITEMS_PER_PAGE = 9;
 
-const total_items_perpage = 12;
+const ViewMasterList = ({ cart, setCart }) => {
+  const [masterItems, setMasterItems] = useState([]);
+  const [currPage, setCurrPage] = useState(1);
 
-const ViewMasterList = () => {
-  const[currPage , setCurrPage] = useState(1);
 
-  const totalItemsInTheList = AvailableItmesInMasterList.length;
+  useEffect(() => {
+    const fetchMasterItems = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/master-list');
+        setMasterItems(response.data);
+      } catch (error) {
+        console.error('Error fetching master list:', error);
+      }
+    };
+    fetchMasterItems();
+  }, []);
 
-  const totalNoOfPages = totalItemsInTheList / total_items_perpage;
+  const handleAddToCart = (item) => {
+  setCart(prev => {
+    if (prev.find(i => i.id === item.id)) return prev;
+    return [...prev, { ...item, quantity: 1 }];
+  });
+};
 
-  const S_Index = (currPage - 1) * total_items_perpage;
-  const currItem = AvailableItmesInMasterList.slice(S_Index , S_Index + total_items_perpage)
-
-  const ChangePrev =()=>{
-    setCurrPage((prev) => Math.max(prev-1 , 1));
-  }
-
-  const ChangeNext =()=>{
-    setCurrPage((prev) => Math.max(prev+1 ,totalNoOfPages));
-  }
+  const totalItems = masterItems.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIdx = (currPage - 1) * ITEMS_PER_PAGE;
+  const currentItems = masterItems.slice(startIdx, startIdx + ITEMS_PER_PAGE);
 
 
   return (
     <div>
-    <div className="flex-1 p-0">
-       <h2 className="mt-2 text-lg font-semibold">Items Available</h2>
-      <div className="grid grid-cols-4 gap-6 mt-4">
+      <div className="flex justify-end text-sm text-black font-semibold mt-1 mr-4">
+        Total Items: {totalItems}
+      </div>
 
-        {currItem.map((item, idx) => (
-          <div key={idx} className="bg-white shadow rounded-lg p-1 text-center">
+      <div className="mb-8 text-xl font-bold text-center text-green-600">
+        View Master List
+      </div>
+
+      <div className="grid grid-cols-3 gap-6 mt-4">
+        {currentItems.map((item, idx) => (
+          <div
+            key={item.id || idx}
+            className="relative bg-white shadow rounded-lg p-3 text-center"
+          >
             <div className="text-4xl">{item.img}</div>
             <h3 className="mt-2 font-bold">{item.name}</h3>
             <p className="text-yellow-500 mt-1">⭐⭐</p>
-            <p className="mt-1">{item.price}</p>
+            <p className="mt-1">₹{item.price}</p>
+
+            <button
+              onClick={() => handleAddToCart(item)}
+              className="absolute bottom-2 right-2 text-green-600 hover:text-green-800"
+              title="Add to cart"
+            >
+              <Plus size={20} />
+            </button>
           </div>
         ))}
-      </div>  
-      <div className="flex justify-end mt-6 space-x-1">
-        <button
-          onClick={ChangePrev}
-          className="px-4 py-2 bg-green-400 rounded hover:bg-white font-bold"
-        >
-          Previous
-        </button>
-        <span className="px-4 py-2 text-gray-700">
-        </span>
-        <button
-          onClick={ChangeNext}
-          className="px-4 py-2 bg-green-400 rounded hover:bg-white font-bold"
-        >
-          Next
-        </button>
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-4 space-x-3 items-center">
+          <button
+            onClick={() => setCurrPage(p => Math.max(p - 1, 1))}
+            disabled={currPage === 1}
+            className="px-4 py-1 bg-white border hover:bg-gray-100"
+          >
+            Previous
+          </button>
+          <span className="font-bold">{currPage}</span>
+          <button
+            onClick={() => setCurrPage(p => Math.min(p + 1, totalPages))}
+            disabled={currPage === totalPages}
+            className="px-4 py-1 bg-white border hover:bg-gray-100"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
-    </div>
-  )
-}
+  );
+};
 
 export default ViewMasterList;

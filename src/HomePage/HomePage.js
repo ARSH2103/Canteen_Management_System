@@ -10,7 +10,6 @@ const HomePage = () => {
     
     <div className="min-h-screen bg-[#219C89] text-white flex flex-col">
 
-      {/* Calling of all the other components like Header , MainContent , MainStatsSection*/}
       <Header />
       <MainContent />
       <MainStatsSection />

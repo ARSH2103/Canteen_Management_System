@@ -6,7 +6,6 @@ const Header = () => {
   const navigate = useNavigate();
   return (
     <div>
-        {/* Navbar section which consists of the company name along eith the login and signup buttons */}
       <header className="w-full flex justify-between items-center px-6 py-4">
         <div className="text-4xl font-bold">Company</div>
         <div className="space-x-4">
