@@ -1,13 +1,13 @@
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const MainStatsSection = () => {
-     // Created a fucntion named navigate which uses useNavigate function which would help to direct the user to the another pages.
+  // Created a fucntion named navigate which uses useNavigate function which would help to direct the user to the another pages.
 
   // Using the usestate so that we can change the states when the numbers are changing.
   const [employeeCount, setEmployeeCount] = useState(0);
   const [dailyTransactions, setDailyTransactions] = useState(0);
   const [availableItems, setAvailableItems] = useState(0);
-  
+
   useEffect(() => {
     // The fetchstats would call the function once when the component is loaded.
     fetchStats();
@@ -16,24 +16,21 @@ const MainStatsSection = () => {
 
   // Creating the function to get the live data from the server.
   const fetchStats = async () => {
-    try 
-    {
+    try {
       const response = await fetch("http://localhost:3000/api/stats");
       const data = await response.json();
       setEmployeeCount(data.totalEmployees);
       setDailyTransactions(data.dailyTransactions);
       setAvailableItems(data.availableItems);
-    } 
-    catch (error)
-    {
+    }
+    catch (error) {
       console.error("Failed to fetch the stats from the Backend:", error);
     }
   };
-  
+
   return (
     <div>
-         <main className="flex flex-col items-center justify-center text-center flex-grow px-4 py-3">
-        {/* These are the main stats section which would be updated as soon the backend updation is done */}
+      <main className="flex flex-col items-center justify-center text-center flex-grow px-4 py-3">
 
         <div className="flex flex-col md:flex-row gap-6 pb-10">
           <div className="bg-gray-300 text-black rounded-xl shadow-md p-6 text-center w-64">
@@ -50,7 +47,7 @@ const MainStatsSection = () => {
           </div>
         </div>
       </main>
-      
+
     </div>
   )
 }

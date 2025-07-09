@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
@@ -10,64 +10,56 @@ const Signup = () => {
     email: '',
     password: '',
     department: '',
-    role:'Admin',
+    role: 'Admin',
   });
 
-  const [error , setError] = useState({});
+  const [error, setError] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
 
 
-  const ValidateUsername = (username) =>{
-    if(!username.trim())
-    {
+  const ValidateUsername = (username) => {
+    if (!username.trim()) {
       return `Username is required`;
     }
-    if(username.length <3)
-    {
+    if (username.length < 3) {
       return `Username must have atleast 3 characters`
-    }return '';
+    } return '';
   }
 
-  const ValidateEmployeeId = (employeeId) =>{
-    if(!employeeId.trim())
-    {
+  const ValidateEmployeeId = (employeeId) => {
+    if (!employeeId.trim()) {
       return `Employee Id is required`
     }
-        if (!/^\d+$/.test(employeeId)) return 'Employee ID must be numeric';
-return '';
+    if (!/^\d+$/.test(employeeId)) return 'Employee ID must be numeric';
+    return '';
   }
 
-  const ValidateEmail = (email) =>{
+  const ValidateEmail = (email) => {
     const Regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!email.trim())
-    {
+    if (!email.trim()) {
       return 'Email is required';
     }
-    if(!Regex.test(email))
-    {
+    if (!Regex.test(email)) {
       return 'Enter a valid email';
-    }return '';
+    } return '';
   }
 
-  const ValidatePassword = (password)=>{
-    if(!password.trim())
-    {
+  const ValidatePassword = (password) => {
+    if (!password.trim()) {
       return 'Password is required';
     }
-    if(password.length <6)
-    {
+    if (password.length < 6) {
       return 'Password must have atleast 6 characters';
-    }return '';
+    } return '';
   }
 
-  const ValidateDepartment = (department)=>{
-    if(!department.trim())
-    {
+  const ValidateDepartment = (department) => {
+    if (!department.trim()) {
       return 'Department is required';
-    }return '';
+    } return '';
   }
 
-   useEffect(() => {
+  useEffect(() => {
     const newError = {
       username: ValidateUsername(formData.username),
       employeeId: ValidateEmployeeId(formData.employeeId),
@@ -82,10 +74,10 @@ return '';
 
   // Creating the functiuon named as handleRoleChange which would change the role of the user according to the option selected by the user.
   const handleRoleChange = (role) => {
-  setFormData((OldData) => ({
+    setFormData((OldData) => ({
       // the below line is used to copy all the data as it is.(also Known as Spread operator). 
-      ...OldData,  role
-     }));
+      ...OldData, role
+    }));
   };
 
   // const navigate = useNavigate();
@@ -93,13 +85,12 @@ return '';
   // Created the Funtion handleSubmit which would handle when the form is been submitted.
   const handleSubmit = async (error) => {
     error.preventDefault();
-    
-    try 
-    {
+
+    try {
       const res = await axios.post('http://localhost:3000/Signup', formData);
       alert(res.data.message);
-      window.location.href='/Login'
-    }catch(error){
+      window.location.href = '/Login'
+    } catch (error) {
       alert("Signup Failed");
     }
   };
@@ -117,13 +108,13 @@ return '';
             name="username"
             placeholder="Username"
             value={formData.username}
-            onChange={(e) => setFormData({ ...formData, username: e.target.value })}          
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-           {formData.username !== '' && error.username && (
-             <p className="text-red-500 text-sm mt-1">{error.username}</p>
-           )}
+          {formData.username !== '' && error.username && (
+            <p className="text-red-500 text-sm mt-1">{error.username}</p>
+          )}
           <input
             type="text"
             name="employeeId"
@@ -133,9 +124,9 @@ return '';
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-            {formData.employeeId !== '' && error.employeeId && (
-             <p className="text-red-500 text-sm mt-1">{error.employeeId}</p>
-           )}
+          {formData.employeeId !== '' && error.employeeId && (
+            <p className="text-red-500 text-sm mt-1">{error.employeeId}</p>
+          )}
           <input
             type="email"
             name="email"
@@ -145,9 +136,9 @@ return '';
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-           {formData.email !== '' && error.email && (
-             <p className="text-red-500 text-sm mt-1">{error.email}</p>
-           )}
+          {formData.email !== '' && error.email && (
+            <p className="text-red-500 text-sm mt-1">{error.email}</p>
+          )}
           <input
             type="password"
             name="password"
@@ -157,9 +148,9 @@ return '';
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-           {formData.password !== '' && error.password && (
-             <p className="text-red-500 text-sm mt-1">{error.password}</p>
-           )}
+          {formData.password !== '' && error.password && (
+            <p className="text-red-500 text-sm mt-1">{error.password}</p>
+          )}
 
           <input
             type="text"
@@ -170,32 +161,30 @@ return '';
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-            {formData.department !== '' && error.department && (
-             <p className="text-red-500 text-sm mt-1">{error.department}</p>
-           )}
+          {formData.department !== '' && error.department && (
+            <p className="text-red-500 text-sm mt-1">{error.department}</p>
+          )}
 
           {/* Role Selection */}
           <div className="flex justify-between gap-4">
             <button
               type="button"
-              className={`w-1/2 py-2 rounded-lg ${
-                formData.role ==='Admin'
-                // Using strick Operator over here to compare the role.
-                // Also using the ternary condition over here for role option.
+              className={`w-1/2 py-2 rounded-lg ${formData.role === 'Admin'
+                  // Using strick Operator over here to compare the role.
+                  // Also using the ternary condition over here for role option.
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-gray-600'
-              }`}
+                }`}
               onClick={() => handleRoleChange('Admin')}
             >
               Admin
             </button>
             <button
               type="button"
-              className={`w-1/2 py-2 rounded-lg ${
-                formData.role ==='Employee'
+              className={`w-1/2 py-2 rounded-lg ${formData.role === 'Employee'
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-200 text-gray-600'
-              }`}
+                }`}
               onClick={() => handleRoleChange('Employee')}
             >
               Employee
@@ -203,16 +192,15 @@ return '';
           </div>
 
           <button
-              type="submit"
-              disabled={!isFormValid}
-              className={`w-full ${
-                isFormValid
-                  ? 'bg-green-500 hover:bg-green-600'
-                  : 'bg-gray-300 cursor-not-allowed'
+            type="submit"
+            disabled={!isFormValid}
+            className={`w-full ${isFormValid
+                ? 'bg-green-500 hover:bg-green-600'
+                : 'bg-gray-300 cursor-not-allowed'
               } text-white p-3 rounded-lg font-semibold transition-all`}
-            >
-              SignUp
-            </button>
+          >
+            SignUp
+          </button>
         </form>
 
         <p className="text-sm text-gray-600 mt-6">

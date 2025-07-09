@@ -23,7 +23,7 @@ const SelectFromMasterList = () => {
     try {
       await axios.post('http://localhost:3000/api/items-of-the-day', { items: selectedItems });
       console.log(selectedItems);
-      
+
       alert('Items of the Day saved!');
     } catch (err) {
       console.error('Submission error:', err);

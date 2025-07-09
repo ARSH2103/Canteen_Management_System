@@ -71,7 +71,7 @@ const DeleteItemsPage = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <main className="flex-1 px-10 py-6">
-        <h2 className="text-green-500 text-xl font-semibold mb-6">Edit / Delete Items</h2>
+        <h2 className="flex justify-center text-green-500 text-3xl font-bold mb-6">Edit / Delete Items</h2>
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border text-sm">

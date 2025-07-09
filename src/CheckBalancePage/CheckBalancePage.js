@@ -8,22 +8,22 @@ const CheckBalancePage = ({ role = 'admin', userId = '11' }) => {
   const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
 
-useEffect(() => {
-  const fetchBalanceData = async () => {
-    try {
-      const res = await fetch(`http://localhost:3000/api/users/${userId}/money`);
-      const data = await res.json();
-      setBalance(data.money);
-      setTransactions(data.transactions);
-    } catch (err) {
-      console.error("Fetch error:", err);
-    }
-  };
+  useEffect(() => {
+    const fetchBalanceData = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/users/${userId}/money`);
+        const data = await res.json();
+        setBalance(data.money);
+        setTransactions(data.transactions);
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+    };
 
-  fetchBalanceData();
-  const interval = setInterval(fetchBalanceData, 5000);
-  return () => clearInterval(interval);
-}, [userId, balance]);
+    fetchBalanceData();
+    const interval = setInterval(fetchBalanceData, 5000);
+    return () => clearInterval(interval);
+  }, [userId, balance]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-6">
@@ -31,7 +31,7 @@ useEffect(() => {
 
       <div className="bg-white p-6 rounded-2xl shadow-lg mb-8 transition-all duration-300 hover:shadow-xl">
         <h3 className="text-xl font-semibold text-gray-700 mb-3">
-          {role === 'admin' ? 'Total Canteen Balance' : 'Your Current Balance'}
+          {role === 'admin' ? 'Total Balance' : 'Your Balance'}
         </h3>
         <p className="text-5xl font-extrabold text-blue-700 tracking-wide">₹ {balance.toLocaleString()}</p>
       </div>
@@ -40,7 +40,7 @@ useEffect(() => {
         <h3 className="text-xl font-semibold text-gray-700 mb-5">Recent Transactions</h3>
         <div className="overflow-x-auto">
           <table className="w-full border text-sm text-gray-700">
-            <thead className="bg-gray-100 text-sm text-gray-600">
+            <thead className="bg-gray-300 text-sm text-gray-600">
               <tr>
                 <th className="border p-3">S.No</th>
                 <th className="border p-3">Txn ID</th>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import Sidebar from '../Employee_Dashboard/EmployeeSidebar'
 import Card from "./DashboardCard";
 import { useState } from "react";
@@ -49,7 +50,28 @@ const SideBarHeadings = [
 const Dashboard = () => {
 
 
+  const [metrics, setMetrics] = useState({
+    totalEmployees: 0,
+    totalInvoices: 0,
+    totalRevenue: 0,
+    currentDate: "",
+  });
+
   const [currPage, setCurrPage] = useState('dashboard');
+
+  useEffect(() => {
+    const fetchDashboardMetrics = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/api/dashboard-metrics');
+        const data = await res.json();
+        setMetrics(data);
+      } catch (err) {
+        console.error("Error fetching dashboard metrics:", err);
+      }
+    };
+
+    fetchDashboardMetrics();
+  }, []);
 
   const renderContent = () => {
     switch (currPage) {
@@ -59,10 +81,10 @@ const Dashboard = () => {
             <div className="flex-1 p-2" >
               <div className="mb-10 text-3xl font-bold text-center text-green-600">Dashboard</div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 ml-10">
-                <Card title="Total Customers" value="" icon="👤" bgcolour="bg-green-500 w-60 h-50 mb-4" />
-                <Card title="Total Invoice" value="" icon="📄" bgcolour="bg-pink-500 w-60 h-50  mb-4" />
-                <Card title="Date" value="" icon="📅" bgcolour="bg-yellow-400 w-60 h-50  mb-4" />
-                <Card title="Total Revenue" value="" icon="💰" bgcolour="bg-pink-600 w-60 h-50  mb-4" />
+                <Card title="Total Customers" value={metrics.totalEmployees} icon="👤" bgcolour="bg-green-500 w-60 h-50 mb-4" />
+                <Card title="Total Invoice" value={metrics.totalInvoices} icon="📄" bgcolour="bg-pink-500 w-60 h-50  mb-4" />
+                <Card title="Date" value={metrics.currentDate} icon="📅" bgcolour="bg-yellow-400 w-60 h-50  mb-4" />
+                <Card title="Total Revenue" icon="💰" value={`₹${metrics.totalRevenue}`} bgcolour="bg-pink-600 w-60 h-50 mb-4" textSize="text-medium" />
               </div>
             </div>
           </div>
@@ -98,11 +120,11 @@ const Dashboard = () => {
         return <BuyThroughAdmin />;
 
       case "purchase":
-        return <PurchasePage userId={'11'}/>;
+        return <PurchasePage userId={'11'} />;
 
       case "checkBalance":
         return <CheckBalancePage userId={'11'} />;
-        
+
       case "transactionDetails":
         return <TransactionDetailsPage userId={'8'} />;
 

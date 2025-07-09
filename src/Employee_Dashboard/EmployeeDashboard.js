@@ -43,15 +43,13 @@ const EmployeeDashboard = () => {
         return <TransactionDetailsPage userId={'9'} />;
 
       case "purchase":
-        return <PurchasePage userId={'4692'}/>;
+        return <PurchasePage userId={'4692'} />;
 
       default:
         return <div>Page Not Found</div>;
     }
   };
-
-
-
+  
   return (
     <div className="flex min-h-screen bg-gray-50 text-gray-800">
       <Sidebar title="Company" items={SideBarHeadings} onHeadingClick={setCurrPage} />

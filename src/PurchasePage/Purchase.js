@@ -22,8 +22,7 @@ const PurchasePage = ({ userId }) => {
   const addToCart = () => {
     const item = items.find((i) => i.id === +selectedId);
     if (!item) return alert('Select an item');
-    if (qty < 1 || qty > item.quantity) 
-    {
+    if (qty < 1 || qty > item.quantity) {
       return alert('The quantity present in the inventory is less then your demand. Please Select less Quantity');
     }
     setCart((prev) => [
@@ -54,7 +53,7 @@ const PurchasePage = ({ userId }) => {
 
   return (
     <div className="p-6 max-w-lg mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Purchase Items</h2>
+      <h2 className="flex justify-center text-3xl font-bold mb-4 text-green-600">Purchase Items</h2>
 
       <div className="flex gap-2 mb-4">
         <select

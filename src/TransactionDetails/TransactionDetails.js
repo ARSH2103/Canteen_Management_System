@@ -34,41 +34,54 @@ const TransactionDetailsPage = ({ userId }) => {
     if (page < totalPages) setPage(prev => prev + 1);
   };
 
+  const paginatedTransactions = transactions.slice((page - 1) * limit, page * limit);
+
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">Transaction Details</h2>
+      <h2 className=" flex justify-center text-3xl font-bold mb-4 text-green-600">Transaction Details</h2>
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white shadow-md rounded-lg">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="p-3">Sr.No</th>
-              <th className="p-3">Txn ID</th>
-              <th className="p-3">Amount</th>
-              <th className="p-3">Type</th>
-              <th className="p-3">Date</th>
-              <th className="p-3">Balance After</th>
+        <table className="w-full border text-sm text-gray-700">
+          <thead className="bg-gray-300 text-sm text-gray-600">
+            <tr>
+              <th className="border p-3">S.No</th>
+              <th className="border p-3">Txn ID</th>
+              <th className="border p-3">Amount</th>
+              <th className="border p-3">Type</th>
+              <th className="border p-3">Date</th>
+              <th className="border p-3">Balance After</th>
             </tr>
           </thead>
           <tbody>
-            {transactions.slice((page - 1) * limit, page * limit).map((txn,index) => (
-              <tr key={txn.transactionId} className="border-t">
-                <td className="p-3">{index + 1}</td>
-                <td className="p-3">{txn.transactionId}</td>
-                <td className={`p-3 ${txn.type === 'credit' ? 'text-green-600' : 'text-red-600'}`}>
-                  ₹{txn.amount}
-                </td>
-                <td className="p-3 capitalize flex items-center gap-2">
-                  {txn.type === 'credit' ? (
-                    <ArrowDownCircle className="text-green-500" size={18} />
-                  ) : (
-                    <ArrowUpCircle className="text-red-500" size={18} />
-                  )}
-                  {txn.type}
-                </td>
-                <td className="p-3">{new Date(txn.date).toLocaleString()}</td>
-                <td className="p-3">₹{txn.balanceAfter}</td>
+            {paginatedTransactions.length === 0 ? (
+              <tr>
+
               </tr>
-            ))}
+            ) : (
+              paginatedTransactions.map((txn, index) => (
+                <tr key={txn.id} className="text-center hover:bg-gray-50 transition-colors duration-150">
+                  <td className="border p-3 font-medium">{index + 1}</td>
+                  <td className="border p-3 text-gray-500">{txn.id}</td>
+                  <td
+                    className={`border p-3 font-bold ${txn.type === 'Credit' ? 'text-green-600' : 'text-red-500'
+                      }`}
+                  >
+                    ₹ {txn.amount}
+                  </td>
+                  <td className="border p-3">
+                    <div className="flex items-center justify-center gap-2">
+                      {txn.type === 'Credit' ? (
+                        <ArrowDownCircle size={18} className="text-green-500" title="Credit" />
+                      ) : (
+                        <ArrowUpCircle size={18} className="text-red-500" title="Debit" />
+                      )}
+                      <span>{txn.type}</span>
+                    </div>
+                  </td>
+                  <td className="border p-3">{txn.date}</td>
+                  <td className="border p-3">₹ {txn.balanceAfter}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

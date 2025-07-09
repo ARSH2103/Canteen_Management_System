@@ -19,7 +19,7 @@ const BuyThroughAdmin = () => {
     axios.get('http://localhost:3000/api/users')
       .then(res => setEmployees(res.data))
       .catch(console.error);
-  }, [items]);
+  }, []);
 
   const filteredEmployees = employees.filter(e =>
     e.employeeId.toLowerCase().includes(filter.toLowerCase())
@@ -54,14 +54,22 @@ const BuyThroughAdmin = () => {
     }
 
     try {
-      const res = await axios.post('http://localhost:3000/api/orders', {
-       
+      const res = await axios.post('http://localhost:3000/api/admin-orders', {
+        user_id: selectedEmployee,
+        items: cart,
+        total: totalAmount,
       });
-      setOrder( {orderId: res.data.orderId,total: res.data.total,created_at: res.data.created_at});
-      setCart([]);
+
+
+      setOrder({
+        orderId: res.data.orderId,
+        total: res.data.total,
+        created_at: res.data.created_at,
+        items: cart,
+      }); setCart([]);
       setSelectedEmployee('');
     } catch (err) {
-      console.error(err);
+      console.error('Purchase Error:', err.response?.data || err.message || err);
       alert('Error processing purchase.');
     }
   };
@@ -73,14 +81,14 @@ const BuyThroughAdmin = () => {
   return (
     <div className="p-6 flex gap-6">
       <div className="w-2/3">
-        <h2 className="text-xl font-bold mb-4">Available Items</h2>
+        <h2 className="text-2xl font-bold mb-4 text-green-600">Available Items</h2>
         <div className="grid grid-cols-2 gap-4">
           {items.map(item => (
             <div key={item.id} className="p-4 border rounded shadow flex flex-col justify-between">
               <h3 className="font-semibold">{item.name}</h3>
               <p>₹{item.price}</p>
               <button onClick={() => addToCart(item)} className="bg-green-600 text-white px-3 py-1 rounded flex items-center gap-2">
-                <PlusCircle size={16}/> Add
+                <PlusCircle size={16} /> Add
               </button>
             </div>
           ))}
@@ -88,13 +96,13 @@ const BuyThroughAdmin = () => {
       </div>
 
       <div className="w-1/3 bg-white p-4 rounded shadow sticky top-6">
-        <h2 className="text-xl font-bold mb-4">Admin Purchase</h2>
+        <h2 className="text-2xl font-bold mb-4 text-green-600">Admin Purchase</h2>
         <select
           className="w-full border p-2 rounded mb-4"
           value={selectedEmployee}
           onChange={e => setSelectedEmployee(e.target.value)}
         >
-          <option value="">-- Select Employee --</option>
+          <option value="">Select Employee</option>
           {filteredEmployees.map(emp => (
             <option key={emp.id} value={emp.id}>
               {emp.name} ({emp.employeeId})
@@ -102,7 +110,7 @@ const BuyThroughAdmin = () => {
           ))}
         </select>
 
-        {cart.length === 0 ? <p>Cart is empty</p> : (
+        {cart.length === 0 ? <p className='text-black font-bold'>Cart is empty</p> : (
           <>
             <table className="w-full text-sm mb-4">
               <thead><tr><th>Item</th><th>Qty</th><th>Total</th><th></th></tr></thead>

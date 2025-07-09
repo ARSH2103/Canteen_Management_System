@@ -10,16 +10,16 @@ const Header = () => {
         <div className="text-4xl font-bold">Company</div>
         <div className="space-x-4">
           <button
-            
+
             className="bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200 hover:text-black"
-            onClick={()=>navigate('/Login')}
+            onClick={() => navigate('/Login')}
           >
             LOGIN
           </button>
           <button
-            
+
             className="bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200 hover:text-black"
-            onClick={()=>navigate('/Signup')}
+            onClick={() => navigate('/Signup')}
           >
             SIGNUP
           </button>

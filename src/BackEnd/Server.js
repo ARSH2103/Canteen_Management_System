@@ -18,81 +18,137 @@ app.use(express.json());
 
 // Creating the database connection 
 const database = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root12',
-    database: 'userdetails',
+  host: 'localhost',
+  user: 'root',
+  password: 'root12',
+  database: 'userdetails',
 })
 
 database.connect((error) => {
-    if (error) {
-        console.error("Database connection Failed", error)
-        return;
-    }
-    else {
-        console.log("MySQL Databse is Successfully Connected");
-    }
+  if (error) {
+    console.error("Database connection Failed", error)
+    return;
+  }
+  else {
+    console.log("MySQL Databse is Successfully Connected");
+  }
 })
 
 //Signup Route
 app.post('/Signup', (req, res) => {
 
-    const { username, employeeId, email, password, department, role } = req.body;
+  const { username, employeeId, email, password, department, role } = req.body;
 
-    // Hashing the password field
-    bcrypt.hash(password, 8, (error, hash) => {
-        if (error) {
-            return res.status(500).send("Error Occured")
-        }
-        const sql = `INSERT INTO users (username , employeeId , email , password , department , role) VALUES (?, ?, ? ,? ,?, ?)`;
-        database.query(sql, [username, employeeId, email, hash, department, role], (error, result) => {
-            if (error) {
-                console.error(error);
-                return res.status(500).send("Database have some error")
-            }
-            else {
-                res.send({
-                    message: "User Registered successfully",
-                })
-            }
-        });
-
+  // Hashing the password field
+  bcrypt.hash(password, 8, (error, hash) => {
+    if (error) {
+      return res.status(500).send("Error Occured")
+    }
+    const sql = `INSERT INTO users (username , employeeId , email , password , department , role) VALUES (?, ?, ? ,? ,?, ?)`;
+    database.query(sql, [username, employeeId, email, hash, department, role], (error, result) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).send("Database have some error")
+      }
+      else {
+        res.send({
+          message: "User Registered successfully",
+        })
+      }
     });
+
+  });
 });
 
 // Login Route
 app.post('/Login', (req, res) => {
-    const { email, password } = req.body;
-    const sql = 'SELECT * FROM users WHERE email = ?';
+  const { email, password } = req.body;
+  const sql = 'SELECT * FROM users WHERE email = ?';
 
 
-    database.query('SELECT * FROM users WHERE email =?', [email], (error, result) => {
-        if (error) {
-            return res.status(500).send('Error Occured in the Database');
-        }
-        if (result.length === 0) {
-            return res.status(401).send('User not Found')
-        }
+  database.query('SELECT * FROM users WHERE email =?', [email], (error, result) => {
+    if (error) {
+      return res.status(500).send('Error Occured in the Database');
+    }
+    if (result.length === 0) {
+      return res.status(401).send('User not Found')
+    }
 
-        const user = result[0];
-        console.log(user);
+    const user = result[0];
+    console.log(user);
 
-        bcrypt.compare(password, user.password, (error, isMatch) => {
-            if (error) {
-                return res.status(500).send("Error Occured")
-            }
-            if (!isMatch) {
-                return res.status(401).send("Incorrect Password")
-            }
+    bcrypt.compare(password, user.password, (error, isMatch) => {
+      if (error) {
+        return res.status(500).send("Error Occured")
+      }
+      if (!isMatch) {
+        return res.status(401).send("Incorrect Password")
+      }
 
-            res.send({
-                message: "Login Successful",
-                role: user.role
-            })
-        })
+      res.send({
+        message: "Login Successful",
+        role: user.role
+      })
     })
+  })
 })
 
+
+// Stats fetch Route
+app.get('/api/stats', (req, res) => {
+  const employeeQuery = 'SELECT COUNT(*) AS totalEmployees FROM users';
+  const itemsQuery = 'SELECT COUNT(*) AS availableItems FROM master_items';
+  const txnQuery = `
+    SELECT COUNT(*) AS dailyTransactions 
+    FROM transactions 
+    WHERE DATE(created_at) = CURDATE()
+  `;
+
+  database.query(employeeQuery, (err1, employeeRes) => {
+    if (err1) return res.status(500).json({ error: 'Failed to get employee count' });
+
+    database.query(itemsQuery, (err2, itemsRes) => {
+      if (err2) return res.status(500).json({ error: 'Failed to get item count' });
+
+      database.query(txnQuery, (err3, txnRes) => {
+        if (err3) return res.status(500).json({ error: 'Failed to get transaction count' });
+
+        res.json({
+          totalEmployees: employeeRes[0].totalEmployees,
+          availableItems: itemsRes[0].availableItems,
+          dailyTransactions: txnRes[0].dailyTransactions,
+        });
+      });
+    });
+  });
+});
+
+
+// Admin Dashborad Matrics
+app.get('/api/dashboard-metrics', (req, res) => {
+  const totalUsersQuery = `SELECT COUNT(*) AS totalEmployees FROM users`;
+  const totalInvoicesQuery = `SELECT COUNT(*) AS totalInvoices FROM orders`;
+  const totalRevenueQuery = `SELECT SUM(total) AS totalRevenue FROM orders`;
+
+  database.query(totalUsersQuery, (err1, userRes) => {
+    if (err1) return res.status(500).json({ error: 'Failed to fetch employee count' });
+
+    database.query(totalInvoicesQuery, (err2, invoiceRes) => {
+      if (err2) return res.status(500).json({ error: 'Failed to fetch invoice count' });
+
+      database.query(totalRevenueQuery, (err3, revenueRes) => {
+        if (err3) return res.status(500).json({ error: 'Failed to fetch revenue' });
+
+        return res.json({
+          totalEmployees: userRes[0].totalEmployees,
+          totalInvoices: invoiceRes[0].totalInvoices,
+          totalRevenue: revenueRes[0].totalRevenue || 0,
+          currentDate: new Date().toISOString().split("T")[0],
+        });
+      });
+    });
+  });
+});
 
 
 
@@ -119,7 +175,7 @@ app.post('/api/items-of-the-day', (req, res) => {
   const deleteQuery = 'DELETE FROM items_of_the_day';
   const insertQuery = 'INSERT INTO items_of_the_day (item_id, quantity) VALUES ?';
 
-  const values = items.map(item => [item.id, 1]); 
+  const values = items.map(item => [item.id, 1]);
 
   database.query(deleteQuery, (err) => {
     if (err) {
@@ -187,23 +243,23 @@ app.put('/api/items-of-the-day', (req, res) => {
 
 //Add Employee Route
 app.post('/api/users', (req, res) => {
-    const { username, employeeId, email, password, department, role } = req.body;
+  const { username, employeeId, email, password, department, role } = req.body;
 
-    bcrypt.hash(password, 6, (err, hash) => {
-        if (err) {
-            return res.status(500).send('Error hashing password');
-        }
+  bcrypt.hash(password, 6, (err, hash) => {
+    if (err) {
+      return res.status(500).send('Error hashing password');
+    }
 
-        const sql = `INSERT INTO users (username, employeeId, email, password, department, role) VALUES (?, ?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO users (username, employeeId, email, password, department, role) VALUES (?, ?, ?, ?, ?, ?)`;
 
-        database.query(sql, [username, employeeId, email, hash, department, role], (error, result) => {
-            if (error) {
-                console.error(error);
-                return res.status(500).json({ error: 'Failed to add employee' });
-            }
-            return res.status(201).json({ message: 'Employee added successfully'});
-        });
+    database.query(sql, [username, employeeId, email, hash, department, role], (error, result) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to add employee' });
+      }
+      return res.status(201).json({ message: 'Employee added successfully' });
     });
+  });
 });
 
 // View Employee Route
@@ -237,7 +293,7 @@ app.post('/api/items', (req, res) => {
     [name, parseInt(quantity), parseFloat(rate), category_name, status],
     (err, result) => {
       if (err) {
-        console.error( err.message);
+        console.error(err.message);
         return res.status(500).json({ error: 'Database insertion failed' });
       }
       return res.status(201).json({ message: 'Item added successfully', id: result.insertId });
@@ -279,18 +335,18 @@ app.put('/api/items/:id', (req, res) => {
 
 
 // Get Balance + Transaction Route
-  app.get('/api/users/:employeeId/money', (req, res) => {
-    const { employeeId } = req.params;
+app.get('/api/users/:employeeId/money', (req, res) => {
+  const { employeeId } = req.params;
 
-    const userQuery = 'SELECT id, money FROM users WHERE employeeId = ?';
-    database.query(userQuery, [employeeId], (err, userResults) => {
-      if (err) return res.status(500).json({ error: 'Database error' });
-      if (userResults.length === 0) return res.status(404).json({ error: 'User not found' });
+  const userQuery = 'SELECT id, money FROM users WHERE employeeId = ?';
+  database.query(userQuery, [employeeId], (err, userResults) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (userResults.length === 0) return res.status(404).json({ error: 'User not found' });
 
-      const userId = userResults[0].id;
-      const money = userResults[0].money;
+    const userId = userResults[0].id;
+    const money = userResults[0].money;
 
-      const txnQuery = `
+    const txnQuery = `
         SELECT id, amount, type, balance_after AS balanceAfter, created_at AS date
         FROM transactions
         WHERE user_id = ?
@@ -298,12 +354,12 @@ app.put('/api/items/:id', (req, res) => {
         LIMIT 10
       `;
 
-      database.query(txnQuery, [userId], (txnErr, txnResults) => {
-        if (txnErr) return res.status(500).json({ error: 'Transaction fetch failed' });
-        res.json({ money, transactions: txnResults });
-      });
+    database.query(txnQuery, [userId], (txnErr, txnResults) => {
+      if (txnErr) return res.status(500).json({ error: 'Transaction fetch failed' });
+      res.json({ money, transactions: txnResults });
     });
   });
+});
 
 //Add Money Route
 app.post('/api/money', (req, res) => {
@@ -345,7 +401,7 @@ app.get('/api/users/:userId/transactions', (req, res) => {
 
   const query = `
     SELECT 
-      id AS transactionId,
+      id,
       amount,
       type,
       balance_after AS balanceAfter,
@@ -383,6 +439,7 @@ app.post('/api/orders', (req, res) => {
     if (err) {
       return res.status(500).json({ error: 'Failed to start transaction' });
     }
+
 
     database.query(
       'INSERT INTO orders (user_id, total) VALUES (?, ?)',
@@ -422,7 +479,7 @@ app.post('/api/orders', (req, res) => {
                 [it.quantity, it.id],
                 stockErr => {
                   if (stockErr) {
-                    console.error( stockErr);
+                    console.error(stockErr);
                     return database.rollback(() => res.status(500).json({ error: 'Stock update failed' }));
                   }
                   nextItem();
@@ -442,18 +499,71 @@ app.post('/api/orders', (req, res) => {
 
 
 // Admin purchase Route
-app.post('/api/orders', (req, res) => {
-  console.log(req);
-  const {order_id , user_id , total , created_at} = req.body;
+app.post('/api/admin-orders', (req, res) => {
+  const { user_id, items, total } = req.body;
+  const created_at = new Date();
 
-  const insertQuery = `
-       INSERT INTO order_items (order_id , user_id , total , created_at)
-        VALUES (?, ?, ?, ?, ?, ?)
-  `;
+  if (!user_id || !items || items.length === 0 || !total) {
+    return res.status(400).json({ error: 'Invalid request data' });
+  }
 
-  database.query(insertQuery, (err, result) => {
-    if (err) return res.status(500).json({ error: 'Purchase failed' });
-    res.json({ success: true, orderId: result.insertId, total: items.reduce((sum, i) => sum + i.total, 0) });
+  const insertOrderQuery = `INSERT INTO orders (user_id, total, created_at) VALUES (?, ?, ?)`;
+
+  database.query(insertOrderQuery, [user_id, total, created_at], (err, result) => {
+    if (err) {
+      console.error('Order insert error:', err);
+      return res.status(500).json({ error: 'Order creation failed' });
+    }
+
+    const orderId = result.insertId;
+    const orderItemsQuery = `INSERT INTO order_items (order_id, item_id, quantity, price) VALUES ?`;
+    const values = items.map(item => [orderId, item.id, item.quantity, item.price]);
+
+    database.query(orderItemsQuery, [values], (err2) => {
+      if (err2) {
+        console.error('Order items insert error:', err2);
+        return res.status(500).json({ error: 'Order items insert failed' });
+      }
+
+      const getBalanceQuery = `SELECT money FROM users WHERE id = ?`;
+      database.query(getBalanceQuery, [user_id], (err3, result3) => {
+        if (err3 || result3.length === 0) {
+          console.error('Failed to fetch user balance:', err3);
+          return res.status(500).json({ error: 'Failed to fetch user balance' });
+        }
+
+        const currentBalance = result3[0].money;
+        const newBalance = currentBalance - total;
+
+        const updateBalanceQuery = `UPDATE users SET money = ? WHERE id = ?`;
+        database.query(updateBalanceQuery, [newBalance, user_id], (err4) => {
+          if (err4) {
+            console.error('Balance update error:', err4);
+            return res.status(500).json({ error: 'Balance update failed' });
+          }
+
+          const transactionQuery = `
+            INSERT INTO transactions (user_id, amount, type, balance_after, created_at)
+            VALUES (?, ?, 'debit', ?, ?)
+          `;
+
+          database.query(transactionQuery, [user_id, total, newBalance, created_at], (err5) => {
+            if (err5) {
+              console.error('Transaction insert error:', err5);
+              return res.status(500).json({ error: 'Transaction insert failed' });
+            }
+
+            res.json({
+              success: true,
+              orderId,
+              total,
+              created_at,
+              newBalance,
+            });
+          });
+        });
+      });
+    });
   });
 });
 
@@ -461,6 +571,6 @@ app.post('/api/orders', (req, res) => {
 
 // Starting the server using .listen
 app.listen(PORT, () => {
-    console.log(`The BackEnd Server is running at ${PORT} `);
+  console.log(`The BackEnd Server is running at ${PORT} `);
 
 })  

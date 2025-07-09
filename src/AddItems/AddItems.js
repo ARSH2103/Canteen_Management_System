@@ -108,9 +108,8 @@ const AddItems = () => {
             <select
               value={formData.category_name}
               onChange={e => handleChange(e, 'category_name')}
-              className={`w-full p-3 border rounded-lg ${
-                error.category_name ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-green-400'
-              } focus:outline-none focus:ring-2`}
+              className={`w-full p-3 border rounded-lg ${error.category_name ? 'border-red-500 focus:ring-red-400' : 'border-gray-300 focus:ring-green-400'
+                } focus:outline-none focus:ring-2`}
             >
               <option value="">Select Category</option>
               {categoryOptions.map(cat => (

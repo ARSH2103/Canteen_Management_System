@@ -22,11 +22,11 @@ const ViewMasterList = ({ cart, setCart }) => {
   }, []);
 
   const handleAddToCart = (item) => {
-  setCart(prev => {
-    if (prev.find(i => i.id === item.id)) return prev;
-    return [...prev, { ...item, quantity: 1 }];
-  });
-};
+    setCart(prev => {
+      if (prev.find(i => i.id === item.id)) return prev;
+      return [...prev, { ...item, quantity: 1 }];
+    });
+  };
 
   const totalItems = masterItems.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
@@ -40,7 +40,7 @@ const ViewMasterList = ({ cart, setCart }) => {
         Total Items: {totalItems}
       </div>
 
-      <div className="mb-8 text-xl font-bold text-center text-green-600">
+      <div className="mb-8 text-3xl font-bold text-center text-green-600">
         View Master List
       </div>
 
